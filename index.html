@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ContactHub - Smart Contact Manager</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+
+  <!-- Inter, as used by the reference site -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 and Font Awesome Free 6 (both local) -->
+  <link rel="stylesheet" href="./css/bootstrap.min.css">
+  <link rel="stylesheet" href="./css/fontawesome.min.css">
+  <link rel="stylesheet" href="./css/solid.min.css">
+  <link rel="stylesheet" href="./css/regular.min.css">
+
+  <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to contacts</a>
+
+  <!-- Subtle background pattern -->
+  <div class="bg-pattern" aria-hidden="true">
+    <div class="bg-blob bg-blob--blue"></div>
+    <div class="bg-blob bg-blob--violet"></div>
+    <div class="bg-blob bg-blob--emerald"></div>
+  </div>
+
+  <!-- Header -->
+  <header id="header" class="site-header">
+    <div class="page-container">
+      <div class="site-header__row">
+        <div class="brand">
+          <div class="brand__logo"><i class="fa-solid fa-address-book" aria-hidden="true"></i></div>
+          <div>
+            <h1 class="brand__title">Contact<span>Hub</span></h1>
+            <p class="brand__tagline">Smart Contact Manager</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button type="button" id="addContactBtn" class="btn-primary-gradient btn-add">
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            <span class="label-wide">Add Contact</span>
+            <span class="label-narrow">Add</span>
+          </button>
+          <button type="button" id="notificationsBtn" class="icon-btn icon-btn--header" aria-label="Notifications" title="Notifications">
+            <i class="fa-solid fa-bell" aria-hidden="true"></i>
+          </button>
+          <button type="button" id="settingsBtn" class="icon-btn icon-btn--header" aria-label="Settings" title="Settings">
+            <i class="fa-solid fa-gear" aria-hidden="true"></i>
+          </button>
+          <div class="header-avatar">
+            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg" alt="Profile" width="40" height="40">
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main id="main-content" class="page-container main-content">
+    <!-- Stats cards -->
+    <section id="quick-stats" class="stats" aria-label="Contact statistics">
+      <div class="stats__grid">
+        <div class="stat-card">
+          <div class="stat-card__inner">
+            <div class="stat-card__icon stat-card__icon--blue"><i class="fa-solid fa-users" aria-hidden="true"></i></div>
+            <div class="stat-card__text">
+              <p class="stat-card__label">Total</p>
+              <p class="stat-card__value" id="statTotal">0</p>
+            </div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__inner">
+            <div class="stat-card__icon stat-card__icon--amber"><i class="fa-solid fa-star" aria-hidden="true"></i></div>
+            <div class="stat-card__text">
+              <p class="stat-card__label">Favorites</p>
+              <p class="stat-card__value" id="statFavorites">0</p>
+            </div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card__inner">
+            <div class="stat-card__icon stat-card__icon--rose"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i></div>
+            <div class="stat-card__text">
+              <p class="stat-card__label">Emergency</p>
+              <p class="stat-card__value" id="statEmergency">0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <!-- Main column -->
+      <div class="layout__main">
+        <section id="contacts-header" class="contacts-header">
+          <div class="contacts-header__top">
+            <div>
+              <h2 class="contacts-header__title">All Contacts</h2>
+              <p class="contacts-header__subtitle" id="contactsSubtitle">Manage and organize your 0 contacts</p>
+            </div>
+          </div>
+
+          <div class="search">
+            <div class="search__icon"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></div>
+            <label for="searchInput" class="visually-hidden">Search contacts by name, phone or email</label>
+            <input id="searchInput" type="text" class="search__input" placeholder="Search by name, phone, or email..." autocomplete="off" spellcheck="false">
+          </div>
+        </section>
+
+        <section id="contacts-grid" aria-label="Contacts">
+          <div class="contacts-grid" id="contactsList"></div>
+        </section>
+      </div>
+
+      <!-- Sidebar (xl and up) -->
+      <aside class="sidebar">
+        <section id="favorites-section" class="panel" aria-labelledby="favoritesHeading">
+          <div class="panel__header panel__header--amber">
+            <div class="panel__header-inner">
+              <div class="panel__icon panel__icon--amber"><i class="fa-solid fa-star" aria-hidden="true"></i></div>
+              <div>
+                <h2 class="panel__title" id="favoritesHeading">Favorites</h2>
+                <p class="panel__subtitle">Quick access to starred contacts</p>
+              </div>
+            </div>
+          </div>
+          <div class="panel__body" data-list="favorites"></div>
+        </section>
+
+        <section id="emergency-contacts" class="panel" aria-labelledby="emergencyHeading">
+          <div class="panel__header panel__header--rose">
+            <div class="panel__header-inner">
+              <div class="panel__icon panel__icon--rose"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i></div>
+              <div>
+                <h2 class="panel__title" id="emergencyHeading">Emergency</h2>
+                <p class="panel__subtitle">Important contacts for urgent calls</p>
+              </div>
+            </div>
+          </div>
+          <div class="panel__body" data-list="emergency"></div>
+        </section>
+      </aside>
+    </div>
+
+    <!-- Favorites & Emergency (below xl) -->
+    <div class="mobile-panels">
+      <section id="favorites-section-mobile" class="panel" aria-labelledby="favoritesHeadingMobile">
+        <div class="panel__header panel__header--amber panel__header--compact">
+          <div class="panel__header-inner">
+            <div class="panel__icon panel__icon--amber panel__icon--compact"><i class="fa-solid fa-star" aria-hidden="true"></i></div>
+            <div>
+              <h2 class="panel__title panel__title--compact" id="favoritesHeadingMobile">Favorites</h2>
+              <p class="panel__subtitle panel__subtitle--compact">Quick access</p>
+            </div>
+          </div>
+        </div>
+        <div class="panel__body panel__body--mobile" data-list="favorites-mobile"></div>
+      </section>
+
+      <section id="emergency-contacts-mobile" class="panel" aria-labelledby="emergencyHeadingMobile">
+        <div class="panel__header panel__header--rose panel__header--compact">
+          <div class="panel__header-inner">
+            <div class="panel__icon panel__icon--rose panel__icon--compact"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i></div>
+            <div>
+              <h2 class="panel__title panel__title--compact" id="emergencyHeadingMobile">Emergency</h2>
+              <p class="panel__subtitle panel__subtitle--compact">Urgent contacts</p>
+            </div>
+          </div>
+        </div>
+        <div class="panel__body panel__body--mobile" data-list="emergency-mobile"></div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Contact modal (add / edit) -->
+  <div id="contactModal" class="modal-root" hidden>
+    <div class="dialog-backdrop" id="modalBackdrop"></div>
+    <div class="modal-wrap" id="modalWrap">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1" id="modalCard">
+        <div class="modal-card__header">
+          <h2 id="modalTitle" class="modal-card__title">Add New Contact</h2>
+          <button type="button" id="closeModalBtn" class="icon-btn icon-btn--close" aria-label="Close dialog">
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <form id="contactForm" class="contact-form" novalidate>
+          <!-- Avatar -->
+          <div class="avatar-upload">
+            <div id="avatarPreview" class="avatar-upload__preview" aria-hidden="true">
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <label class="avatar-upload__btn">
+              <i class="fa-solid fa-camera" aria-hidden="true"></i>
+              <span>Change Photo</span>
+              <input type="file" id="avatarInput" accept="image/*" class="avatar-upload__input">
+            </label>
+          </div>
+
+          <!-- Name -->
+          <div class="field">
+            <label class="field__label" for="contactName">Full Name <span class="field__required" aria-hidden="true">*</span></label>
+            <input type="text" id="contactName" name="name" class="field__control" placeholder="Enter full name" autocomplete="off" maxlength="60" required aria-describedby="contactNameError">
+            <p id="contactNameError" class="field__error invalid-feedback" role="alert"></p>
+          </div>
+
+          <!-- Phone -->
+          <div class="field">
+            <label class="field__label" for="contactPhone">Phone Number <span class="field__required" aria-hidden="true">*</span></label>
+            <input type="tel" id="contactPhone" name="phone" class="field__control" placeholder="e.g., 01012345678" autocomplete="off" inputmode="tel" maxlength="30" required aria-describedby="contactPhoneError">
+            <p id="contactPhoneError" class="field__error invalid-feedback" role="alert"></p>
+          </div>
+
+          <!-- Email -->
+          <div class="field">
+            <label class="field__label" for="contactEmail">Email Address</label>
+            <input type="email" id="contactEmail" name="email" class="field__control" placeholder="name@example.com" autocomplete="off" maxlength="254" aria-describedby="contactEmailError">
+            <p id="contactEmailError" class="field__error invalid-feedback" role="alert"></p>
+          </div>
+
+          <!-- Address -->
+          <div class="field">
+            <label class="field__label" for="contactAddress">Address</label>
+            <input type="text" id="contactAddress" name="address" class="field__control" placeholder="Enter address" autocomplete="off" maxlength="150">
+          </div>
+
+          <!-- Group -->
+          <div class="field">
+            <label class="field__label" for="contactGroup">Group</label>
+            <select id="contactGroup" name="group" class="field__control field__control--select">
+              <option value="">Select a group</option>
+              <option value="family">Family</option>
+              <option value="friends">Friends</option>
+              <option value="work">Work</option>
+              <option value="school">School</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <!-- Notes -->
+          <div class="field">
+            <label class="field__label" for="contactNotes">Notes</label>
+            <textarea id="contactNotes" name="notes" rows="2" class="field__control field__control--textarea" placeholder="Add notes about this contact" maxlength="500"></textarea>
+          </div>
+
+          <!-- Flags -->
+          <div class="flag-row">
+            <label class="flag">
+              <input type="checkbox" id="contactFavorite" class="flag__box">
+              <span class="flag__text"><i class="fa-solid fa-star flag__icon flag__icon--amber" aria-hidden="true"></i>Favorite</span>
+            </label>
+            <label class="flag">
+              <input type="checkbox" id="contactEmergency" class="flag__box">
+              <span class="flag__text"><i class="fa-solid fa-heart-pulse flag__icon flag__icon--rose" aria-hidden="true"></i>Emergency</span>
+            </label>
+          </div>
+
+          <input type="hidden" id="contactId" value="">
+
+          <!-- Actions -->
+          <div class="form-actions">
+            <button type="button" id="cancelModalBtn" class="btn-cancel">Cancel</button>
+            <button type="submit" id="saveContactBtn" class="btn-primary-gradient btn-save">
+              <i class="fa-solid fa-check" aria-hidden="true"></i>Save Contact
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Polite announcements for assistive tech -->
+  <div id="liveStatus" class="visually-hidden" role="status" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="./js/bootstrap.bundle.min.js"></script>
+  <script src="./js/main.js"></script>
+</body>
+</html>
